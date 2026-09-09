@@ -1,0 +1,16 @@
+# Fallback host (SPEC.md §5 step 4) if Vercel's Python runtime misbehaves.
+# Render: New → Blueprint → point at this repo; rootDir is backend/.
+services:
+  - type: web
+    name: eld-trip-planner-api
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt && python manage.py migrate --noinput
+    startCommand: gunicorn config.wsgi
+    envVars:
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_DEBUG
+        value: "0"
+      - key: PYTHON_VERSION
+        value: "3.12.4"
